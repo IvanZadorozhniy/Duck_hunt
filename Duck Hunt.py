@@ -11,8 +11,11 @@ disp = pygame.Surface(screen.get_size())
 
 
 dog = Dog(0, 360, 100, 100)
+duck = Duck(-40, -40, 40, 40)
 dogs = pygame.sprite.Group()
+ducks = pygame.sprite.Group()
 dogs.add(dog)
+ducks.add(duck)
 
 running = True
 clock = pygame.time.Clock()
@@ -27,11 +30,18 @@ while running:
     if dog.getStage() == "Landing":
 
         dogs.draw(disp)
+        ducks.update()
+        ducks.draw(disp)
         disp.blit(bg, (0, 0))
+
     else:
         disp.blit(bg, (0, 0))
         dogs.draw(disp)
+
+
+
     screen.blit(disp, (0, 0))
+
 
     pygame.display.update()
     clock.tick(30)

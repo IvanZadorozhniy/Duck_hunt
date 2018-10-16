@@ -7,6 +7,10 @@ print(len(dogJumpImg))
 dogJumpAnimation = PygAnimation([dogJumpImg[0]])
 dogLandingAnimation = PygAnimation([dogJumpImg[1]])
 
+
+# TODO refactoring and add speed
+# TODO add a smile for Dog
+
 class Dog(pygame.sprite.Sprite):
     def __init__(self, x, y, width, height):
         super(Dog, self).__init__()
@@ -15,8 +19,6 @@ class Dog(pygame.sprite.Sprite):
         self.size = (width, height)
         self.animation.scale(self.size)
 
-
-
         self.image = pygame.Surface(self.size)
         self.image.fill((100, 100, 100))
         self.image.set_colorkey((100, 100, 100))
@@ -24,7 +26,7 @@ class Dog(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.stages = ["Move","Jump","Landing"]
+        self.stages = ["Move", "Jump", "Landing"]
         self.stage = self.stages[0]
         self.animation.play()
 
@@ -53,20 +55,22 @@ class Dog(pygame.sprite.Sprite):
             else:
                 self.animation.stop()
 
-
     def move(self):
         self.image.fill((100, 100, 100))
         self.animation.blit(self.image, (0, 0))
-        self.rect.x += 10
+        self.rect.x += 3
+
     def jump(self):
         self.image.fill((100, 100, 100))
         self.animation.blit(self.image, (0, 0))
-        self.rect.x += 5
-        self.rect.y -= 10
+        self.rect.x += 4
+        self.rect.y -= 8
+
     def landing(self):
         self.image.fill((100, 100, 100))
         self.animation.blit(self.image, (0, 0))
         self.rect.x += 1
-        self.rect.y += 10
+        self.rect.y += 8
+
     def getStage(self):
         return self.stage
