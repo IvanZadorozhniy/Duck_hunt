@@ -10,8 +10,10 @@ duckFlyAngleAnimation = PygAnimation(duckFlyAngle)
 
 
 class Duck(pygame.sprite.Sprite):
+    containers = 0
     def __init__(self, x, y, width, height):
-        super(Duck, self).__init__()
+
+        pygame.sprite.Sprite.__init__(self, self.containers)
         self.animation = duckFlyAngleAnimation
         self.size = (width, height)
         self.animation.scale(self.size)

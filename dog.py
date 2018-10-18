@@ -12,8 +12,9 @@ dogLandingAnimation = PygAnimation([dogJumpImg[1]])
 # TODO add a smile for Dog
 
 class Dog(pygame.sprite.Sprite):
+    containers = 0
     def __init__(self, x, y, width, height):
-        super(Dog, self).__init__()
+        pygame.sprite.Sprite.__init__(self, self.containers)
 
         self.animation = dogMoveAnimation
         self.size = (width, height)
@@ -54,6 +55,7 @@ class Dog(pygame.sprite.Sprite):
                 self.landing()
             else:
                 self.animation.stop()
+                self.kill()
 
     def move(self):
         self.image.fill((100, 100, 100))
