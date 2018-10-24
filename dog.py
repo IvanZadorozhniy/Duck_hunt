@@ -13,6 +13,7 @@ dogLandingAnimation = PygAnimation([dogJumpImg[1]])
 
 class Dog(pygame.sprite.Sprite):
     containers = 0
+
     def __init__(self, x, y, width, height):
         pygame.sprite.Sprite.__init__(self, self.containers)
 
@@ -21,9 +22,9 @@ class Dog(pygame.sprite.Sprite):
         self.animation.scale(self.size)
 
         self.image = pygame.Surface(self.size)
-        self.image.fill((100, 100, 100))
-        self.image.set_colorkey((100, 100, 100))
-
+        self.image.fill(BG_COLOR_SPRITE)
+        self.image.set_colorkey(BG_COLOR_SPRITE)
+        self.speed = 3
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -32,6 +33,8 @@ class Dog(pygame.sprite.Sprite):
         self.animation.play()
 
     def update(self):
+        self.image.fill(BG_COLOR_SPRITE)
+        self.animation.blit(self.image, (0, 0))
         if self.animation == dogMoveAnimation:
             if self.rect.x < 250:
                 self.move()
@@ -58,19 +61,13 @@ class Dog(pygame.sprite.Sprite):
                 self.kill()
 
     def move(self):
-        self.image.fill((100, 100, 100))
-        self.animation.blit(self.image, (0, 0))
-        self.rect.x += 3
+        self.rect.x += self.speed
 
     def jump(self):
-        self.image.fill((100, 100, 100))
-        self.animation.blit(self.image, (0, 0))
         self.rect.x += 4
         self.rect.y -= 8
 
     def landing(self):
-        self.image.fill((100, 100, 100))
-        self.animation.blit(self.image, (0, 0))
         self.rect.x += 1
         self.rect.y += 8
 
