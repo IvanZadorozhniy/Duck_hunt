@@ -64,7 +64,7 @@ def game():
     createDuck = False
     while running:
         if hDog.endAnimation:
-            duck.setPlace(-40, -40)
+            duck.setPlace(random.randrange(-100,500), random.randrange(-40,200))
             ducks.add(duck)
             all.add(ducks)
         if not duck.alive() and not hDog.run:
@@ -75,6 +75,7 @@ def game():
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # левая кнопка мыши
+                    #TODO сделать проверку не дного пикселя, а квадратика что бы дать больше шансов игроку
                     duck.checkClick(event.pos)
         all.clear(screen, surfaceDisplay)
         all.update()

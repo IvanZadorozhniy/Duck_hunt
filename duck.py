@@ -78,7 +78,10 @@ class Duck(pygame.sprite.Sprite):
 
     def checkClick(self, pos):
         # Check if a user has hit a bird
-        if self.rect.collidepoint(pos):
+        heightForRect = 4
+        #create rect for more often hit in the duck
+        CheckRect = pygame.Rect(pos[0]-heightForRect,pos[1]-heightForRect,heightForRect*2,heightForRect*2)
+        if self.rect.colliderect(CheckRect):
             self.life = False
             self.stage = self.stages[1]
             self.directionX = 0
@@ -107,11 +110,21 @@ class Duck(pygame.sprite.Sprite):
         duckFlyAngleAnimation.clearTransforms()
         self.animation = duckFlyAngleAnimation
         self.animation.scale(self.size)
+
+        if x < 0:
+            self.directionX = 1
+
+        else:
+            self.directionX = -1
+            self.animation.flip(True, False)
+        if y < 0:
+            self.directionY = 1
+        else:
+            self.directionY = -1
         self.stage = self.stages[0]
         self.animation.play()
         self.speed = 15
         self.speedX = randint(2, 14)
         self.speedY = self.speedXY()
-        self.directionX = 1
-        self.directionY = 1
+
         self.life = True
