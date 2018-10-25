@@ -75,7 +75,7 @@ def game():
                 running = False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # левая кнопка мыши
-                    #TODO сделать проверку не дного пикселя, а квадратика что бы дать больше шансов игроку
+                    shoot.play()
                     duck.checkClick(event.pos)
         all.clear(screen, surfaceDisplay)
         all.update()
