@@ -44,6 +44,7 @@ class Duck(pygame.sprite.Sprite):
         self.directionX = 1
         self.directionY = 1
         self.life = True
+        self.FlyAway = False
 
     def update(self):
         self.image.fill(BG_COLOR_SPRITE)
@@ -54,8 +55,7 @@ class Duck(pygame.sprite.Sprite):
 
         self.rect.x += self.speedX * self.directionX
         self.rect.y += self.speedY * self.directionY
-        if self.rect.y > 450 and not self.life:
-            self.kill()
+        self.checkEndLife()
 
     def changeDirection(self):
         if (self.rect.x <= -60 or self.rect.x > size[0] - self.size[0] + 60):
@@ -129,8 +129,13 @@ class Duck(pygame.sprite.Sprite):
         self.speedY = self.speedXY()
 
         self.life = True
+        self.FlyAway = False
     def flyAway(self):
         self.directionY = -1
         self.directionX = 0
-        if self.rect.y < -self.size[1]:
+        self.FlyAway = True
+    def checkEndLife(self):
+        if self.rect.y < -self.size[1] and self.FlyAway:
+            self.kill()
+        if self.rect.y > 450 and not self.life:
             self.kill()

@@ -3,7 +3,6 @@ from settings import *
 dogMoveImg = [('images//move' + str(num) + ".png", 0.2) for num in range(1, 5)]
 dogMoveAnimation = PygAnimation(dogMoveImg)
 dogJumpImg = [('images//jump' + str(num) + ".png", 0.1) for num in range(1, 3)]
-print(len(dogJumpImg))
 dogJumpAnimation = PygAnimation([dogJumpImg[0]])
 dogLandingAnimation = PygAnimation([dogJumpImg[1]])
 

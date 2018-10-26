@@ -1,3 +1,5 @@
+import threading
+
 from settings import *
 from duck import *
 from dog import *
@@ -53,7 +55,9 @@ def game():
     hDogs = pygame.sprite.Group()
     hDogs.add(hDog)
     ducks.add(duck)
-
+    def duckFlyAway():
+        if duck.life:
+            duck.flyAway()
     all.add(ducks)
     all.add(hDogs)
     running = True
@@ -61,19 +65,19 @@ def game():
     surfaceDisplay.fill((61, 191, 255))
     surfaceDisplay.blit(bg, (0, 0))
     screen.blit(surfaceDisplay, (0, 0))
-    createDuck = False
+    timerFlyingDuck = threading.Timer(5, duckFlyAway).start()
     while running:
-        if hDog.endAnimation:
+
+        if (hDog.endAnimation) or (duck.life and not duck.alive()):
+            time.sleep(1.0)
             duck.setPlace(random.randrange(-100,500), random.randrange(-40,200))
             ducks.add(duck)
             all.add(ducks)
             bullets = 3
-        if duck.life and not duck.alive():
-            time.sleep(1.0)
-            duck.setPlace(random.randrange(-100, 500), random.randrange(-40, 200))
-            ducks.add(duck)
-            all.add(ducks)
-            bullets = 3
+            timerFlyingDuck = None
+            timerFlyingDuck = threading.Timer(5, duckFlyAway)
+            timerFlyingDuck.start()
+
         if not duck.alive() and not hDog.run and not duck.life:
             runHappyDog()
 
@@ -86,8 +90,9 @@ def game():
                         bullets -= 1
                         shoot.play()
                         duck.checkClick(event.pos)
-        if bullets == 0:
-            duck.flyAway()
+        if (bullets == 0 and duck.life):
+            duckFlyAway()
+            timerFlyingDuck.cancel()
         all.clear(screen, surfaceDisplay)
         all.update()
 
