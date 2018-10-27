@@ -4,6 +4,7 @@ from pyganim import *
 import random
 
 pygame.init()
+pygame.font.init()
 size = [600, 600]
 screen = pygame.display.set_mode(size)
 
@@ -20,7 +21,7 @@ shoot = pygame.mixer.Sound("music//shoot.ogg")
 shoot.set_volume(1)
 
 # global variable
-duckFlightTime = 5
+duckFlightTime = 7
 WHITE = (255, 255, 255)
 GREEN = (0, 255, 0)
 RED = (255, 0, 0)

@@ -5,10 +5,12 @@ from duck import *
 from dog import *
 from happyDog import *
 from Aim import *
+from Score import *
 all = pygame.sprite.RenderUpdates()
 Duck.containers = all
 Dog.containers = all
 Aim.containers = all
+Score.containers = all
 HappyDog.containers = all
 
 
@@ -51,34 +53,36 @@ def game():
 
     def duckFlyAway():
         if duck.life:
+            score.pickUp()
             duck.flyAway()
 
     pygame.mouse.set_visible(False)
     bullets = NUM_BULLETS
-
+    score = 0
     ducks = pygame.sprite.Group()
     duck = Duck(-40, -40, 40, 40)
-    aim = Aim(-40,-40)
+    aim = Aim(-40, -40)
+    score = Score()
     hDogs = pygame.sprite.Group()
     hDog = HappyDog(270, 400, 100, 100)
-
 
     hDogs.add(hDog)
     ducks.add(duck)
 
-
     all.add(ducks)
     all.add(hDogs)
     all.add(aim)
+    all.add(score)
     running = True
 
-    clock = pygame.time.Clock() # clock allows to do delay for repaint of screen
+    clock = pygame.time.Clock()  # clock allows to do delay for repaint of screen
 
-    surfaceDisplay.fill(COLOR_OF_SKY) # this surface is main field for paint
+    surfaceDisplay.fill(COLOR_OF_SKY)  # this surface is main field for paint
     surfaceDisplay.blit(bg, START_OF_DISPLAY)
-    screen.blit(surfaceDisplay, START_OF_DISPLAY) # show surfaceDisplay on the screen
+    screen.blit(surfaceDisplay, START_OF_DISPLAY)  # show surfaceDisplay on the screen
 
-    timerFlyingDuck = threading.Timer(duckFlightTime, duckFlyAway).start() # Designing timer for duck. When it ticks then the duck flies away
+    timerFlyingDuck = threading.Timer(duckFlightTime,
+                                      duckFlyAway).start()  # Designing timer for duck. When it ticks then the duck flies away
 
     while running:
 
@@ -90,15 +94,18 @@ def game():
             # Adding duck to groups sprite ducks
             # adding this group to all group
             # restart timer
-            time.sleep(DELAY_DUCK_APPEARANCE)
+            # time.sleep(DELAY_DUCK_APPEARANCE)
 
-            duck.setPlace(random.randrange(-100,500), random.randrange(-40,200))
+            duck.setPlace(random.randrange(0, 600), random.randrange(0, 200))
 
             ducks.add(duck)
             all.add(ducks)
 
             bullets = NUM_BULLETS
-
+            try:
+                timerFlyingDuck.cancel()
+            except Exception:
+                print("bivaet")
             timerFlyingDuck = threading.Timer(duckFlightTime, duckFlyAway)
             timerFlyingDuck.start()
 
@@ -119,28 +126,36 @@ def game():
                 if event.button == 1:  # Left button of mouse
                     if bullets > 0:
                         bullets -= 1
-                        shoot.play() # Trigger shot sound
-                        duck.checkClick(event.pos) # Check whether the user got into the duck
+                        shoot.play()  # Trigger shot sound
+                        gotin = duck.checkClick(event.pos)  # Check whether the user got into the duck
+                        if gotin:
+                            score.changeScore(bullets)
+
         # if numbers of bullets equals null and duck is alive
         # then duck flies away and timer will be killed
-        if (bullets == 0 and duck.life):
+        if (bullets == 0 and duck.life and not duck.FlyAway):
             duckFlyAway()
-            timerFlyingDuck.cancel()
+            try:
+                timerFlyingDuck.cancel()
+            except Exception:
+                print("Timer slomalsya")
+
 
         # Repainting sprites
         all.clear(screen, surfaceDisplay)
         all.update()
         dirty = all.draw(screen)
 
-        #Updating screen for user
+        # Updating screen for user
         screen.blit(bg, START_OF_DISPLAY)
         pygame.display.update(dirty)
 
-        #Delay loop
+        # Delay loop
         clock.tick(35)
 
     if not running:
         quit()
+
 
 def quit():
     pygame.quit()
