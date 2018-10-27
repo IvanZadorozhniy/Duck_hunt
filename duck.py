@@ -124,6 +124,9 @@ class Duck(pygame.sprite.Sprite):
             # Timer for launch falling of duck
             timer = Timer(1.0, self.startFalling)
             timer.start()
+            return True
+        else:
+            return False
 
     def startFalling(self):
         '''

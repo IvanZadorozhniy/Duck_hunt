@@ -4,6 +4,7 @@ from pyganim import *
 import random
 
 pygame.init()
+pygame.font.init()
 size = [600, 600]
 screen = pygame.display.set_mode(size)
 
