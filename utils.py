@@ -4,10 +4,11 @@ from settings import *
 from duck import *
 from dog import *
 from happyDog import *
-
+from Aim import *
 all = pygame.sprite.RenderUpdates()
 Duck.containers = all
 Dog.containers = all
+Aim.containers = all
 HappyDog.containers = all
 
 
@@ -52,11 +53,12 @@ def game():
         if duck.life:
             duck.flyAway()
 
+    pygame.mouse.set_visible(False)
     bullets = NUM_BULLETS
 
     ducks = pygame.sprite.Group()
     duck = Duck(-40, -40, 40, 40)
-
+    aim = Aim(-40,-40)
     hDogs = pygame.sprite.Group()
     hDog = HappyDog(270, 400, 100, 100)
 
@@ -67,7 +69,7 @@ def game():
 
     all.add(ducks)
     all.add(hDogs)
-
+    all.add(aim)
     running = True
 
     clock = pygame.time.Clock() # clock allows to do delay for repaint of screen
@@ -111,6 +113,8 @@ def game():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+            if event.type == pygame.MOUSEMOTION:
+                aim.updatePosition(event.pos)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left button of mouse
                     if bullets > 0:
