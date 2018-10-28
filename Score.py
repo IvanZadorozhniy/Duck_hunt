@@ -5,20 +5,20 @@ class Score(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.score = 0
-        self.size = (100,50)
+        self.size = (130,50)
         self.image = pygame.Surface(self.size)
-        self.image.fill(BG_COLOR_SPRITE)
-        self.image.set_colorkey(BG_COLOR_SPRITE)
-        myfont = pygame.font.SysFont('Comic Sans MS', 30)
-        self.image = myfont.render(str(self.score), False, BLACK)
+        self.image.fill(BLACK)
+        self.myfont = pygame.font.SysFont('Duck Hunt', 20)
+        self.surfaceScore = self.myfont.render(str(self.score), False, WHITE,(5,5,5))
+        self.image.blit(self.surfaceScore ,(50,15))
         self.rect = self.image.get_rect()
-        self.rect.x = 0
-        self.rect.y = 0
+        self.rect.x = 445
+        self.rect.y = 515
     def update(self, *args):
-        self.image.fill(BG_COLOR_SPRITE)
-        self.image.set_colorkey(BG_COLOR_SPRITE)
-        myfont = pygame.font.SysFont('Comic Sans MS', 30)
-        self.image = myfont.render(str(self.score), False, BLACK)
+        self.surfaceScore = self.myfont.render(str(self.score), False, WHITE, (5, 5, 5))
+        self.image.blit(self.surfaceScore, (50, 15))
+
+        # self.image = self.myfont.render(str(self.score), False, WHITE,(5,5,5))
     def changeScore(self,bullets):
         if bullets == 2:
             self.score += 1500

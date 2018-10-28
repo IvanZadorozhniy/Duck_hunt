@@ -7,7 +7,7 @@ class Aim(pygame.sprite.Sprite):
     def __init__(self, x, y):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.animation = aimAnimation
-        self.size = (20, 20)
+        self.size = (AIM_SIZE, AIM_SIZE)
         self.animation.scale(self.size)
         self.image = pygame.Surface(self.size)
         self.image.fill(BG_COLOR_SPRITE)

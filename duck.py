@@ -112,7 +112,10 @@ class Duck(pygame.sprite.Sprite):
         heightForRect = HEIGHT_RECT_AIM
         #create rect for more often hit in the duck
         CheckRect = pygame.Rect(pos[0]-heightForRect,pos[1]-heightForRect,heightForRect*2,heightForRect*2)
-        if self.rect.colliderect(CheckRect):
+        if self.rect.contains(CheckRect):
+            print("Kill")
+            print(CheckRect)
+            print(self.rect)
             self.life = False
             self.directionX = 0
             self.directionY = 0

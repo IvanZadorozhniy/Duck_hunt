@@ -60,7 +60,7 @@ def game():
     bullets = NUM_BULLETS
     score = 0
     ducks = pygame.sprite.Group()
-    duck = Duck(-40, -40, 40, 40)
+    duck = Duck(-40, -40, 55, 55)
     aim = Aim(-40, -40)
     score = Score()
     hDogs = pygame.sprite.Group()
@@ -133,12 +133,12 @@ def game():
 
         # if numbers of bullets equals null and duck is alive
         # then duck flies away and timer will be killed
-        if (bullets == 0 and duck.life and not duck.FlyAway):
-            duckFlyAway()
-            try:
-                timerFlyingDuck.cancel()
-            except Exception:
-                print("Timer slomalsya")
+        # if (bullets == 0 and duck.life and not duck.FlyAway):
+        #     duckFlyAway()
+        #     try:
+        #         timerFlyingDuck.cancel()
+        #     except Exception:
+        #         print("Timer slomalsya")
 
 
         # Repainting sprites
