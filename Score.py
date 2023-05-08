@@ -9,13 +9,14 @@ class Score(pygame.sprite.Sprite):
         self.size = (130,50)
         self.image = pygame.Surface(self.size)
         self.image.fill(BLACK)
-        self.myfont = pygame.font.SysFont('Duck Hunt', 20)
+        self.myfont = pygame.font.SysFont('Duck Hunt', 30)
         self.surfaceScore = self.myfont.render(str(self.score), False, WHITE,(5,5,5))
         self.image.blit(self.surfaceScore ,(50,15))
         self.rect = self.image.get_rect()
         self.rect.x = 445
         self.rect.y = 515
     def update(self):
+        self.image.fill(BLACK)
         self.surfaceScore = self.myfont.render(str(self.score), False, WHITE, (5, 5, 5))
         self.image.blit(self.surfaceScore, (50, 15))
 

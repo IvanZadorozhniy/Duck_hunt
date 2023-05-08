@@ -31,18 +31,15 @@ def RunStartingVideoOfGame(screen, surface_display, background_image):
             if event.type == pygame.QUIT:
                 running = False
         dogs.update()
-        if dog.getStage() == "Landing":
-
+        if dog.is_before_background:
             dogs.draw(surface_display)
-
             surface_display.blit(background_image, (0, 0))
-
         else:
             surface_display.blit(background_image, (0, 0))
             dogs.draw(surface_display)
 
-        screen.blit(surface_display, (0, 0))
 
+        screen.blit(surface_display, (0, 0))
         pygame.display.update()
         clock.tick(45)
     if not running:

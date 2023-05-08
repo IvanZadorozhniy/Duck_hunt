@@ -1,15 +1,17 @@
 import pygame
 from pyganim import PygAnimation
 from settings import *
-
+import time, threading
 #load images for create of animation
-dogMoveImg = [('images//move' + str(num) + ".png", 0.2) for num in range(1, 5)]
+dogMoveImg = [('images//dog_walk' + str(num) + ".png", 0.2) for num in range(1, 6)]
 dogMoveAnimation = PygAnimation(dogMoveImg)
 
-dogJumpImg = [('images//jump' + str(num) + ".png", 0.1) for num in range(1, 3)]
+dog_smell_img = [("images//dog_smell.png", 0.2)]
+dog_smell_animation = PygAnimation(dog_smell_img)
+dogJumpImg = [('images//dog_jump' + str(num) + ".png", 0.1) for num in range(1, 3)]
 dogJumpAnimation = PygAnimation([dogJumpImg[0]])
-
 dogLandingAnimation = PygAnimation([dogJumpImg[1]])
+
 
 
 # TODO refactoring and add speed
@@ -32,11 +34,9 @@ class Dog(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        self.stages = ["Move", "Jump", "Landing"]
-        
-        self.stage = self.stages[0]
         self.animation.play()
-
+        self.is_before_background = False
+    
     def update(self):
         # update this sprite
         self.image.fill(BG_COLOR_SPRITE)
@@ -49,20 +49,17 @@ class Dog(pygame.sprite.Sprite):
             if self.rect.x < END_OF_DOG_WAY:
                 self.move()
             else:
-                self.animation.stop()
-                self.animation = dogJumpAnimation
-                self.animation.scale(self.size)
-                self.animation.play()
-                self.stage = self.stages[1]
+                self.__change_animation(dog_smell_animation)
+                timer = threading.Timer(0.9, self.__change_animation, (dogJumpAnimation,))
+                timer.start()
+        elif self.animation == dog_smell_animation:
+            pass
         elif self.animation == dogJumpAnimation:
             if self.rect.y > END_OF_DOG_JUMP:
                 self.jump()
             else:
-                self.animation.stop()
-                self.animation = dogLandingAnimation
-                self.animation.scale(self.size)
-                self.animation.play()
-                self.stage = self.stages[2]
+                self.__change_animation(dogLandingAnimation)
+                self.is_before_background = True
         elif self.animation == dogLandingAnimation:
             if self.rect.y < END_OF_DOG_LANDING:
                 self.landing()
@@ -83,6 +80,9 @@ class Dog(pygame.sprite.Sprite):
         # change position when dog landing
         self.rect.x += self.speed
         self.rect.y += self.speed * 3
-
-    def getStage(self):
-        return self.stage
+    
+    def __change_animation(self, animation):
+        self.animation.stop()
+        self.animation = animation
+        self.animation.scale(self.size)
+        self.animation.play()
