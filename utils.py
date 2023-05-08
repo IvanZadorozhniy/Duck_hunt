@@ -41,7 +41,7 @@ def RunStartingVideoOfGame(screen, surface_display, background_image):
 
         screen.blit(surface_display, (0, 0))
         pygame.display.update()
-        clock.tick(45)
+        clock.tick(FPS)
     if not running:
         quit()
 
@@ -54,7 +54,6 @@ def game(screen, surface_display, background_image):
         if duck.life:
             score.pickUp()
             duck.flyAway()
-
     pygame.mouse.set_visible(False)
     bullets = NUM_BULLETS
     score = 0
@@ -142,7 +141,7 @@ def game(screen, surface_display, background_image):
         pygame.display.update(dirty)
 
         # Delay loop
-        clock.tick(35)
+        clock.tick(FPS)
 
     if not running:
         quit()

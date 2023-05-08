@@ -1,6 +1,8 @@
 WINDOW_HEIGHT = 600
 WINDOW_WIDHT = 600
 
+FPS = 30
+
 # global variable
 DUCK_FLIGHT_TIME = 7
 WHITE = (255, 255, 255)
