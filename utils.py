@@ -8,17 +8,15 @@ from dog import Dog
 
 from duck import Duck
 from happyDog import HappyDog
-from settings import COLOR_OF_SKY, START_OF_DISPLAY, bg, screen, NUM_BULLETS,DUCK_FLIGHT_TIME, shoot, surfaceDisplay
-
-all = pygame.sprite.RenderUpdates()
-Duck.containers = all
-Dog.containers = all
-Aim.containers = all
-Score.containers = all
-HappyDog.containers = all
+from settings import *
 
 
-def RunStartingVideoOfGame():
+import pygame
+# from pyganim import *
+
+
+
+def RunStartingVideoOfGame(screen, surface_display, background_image):
     dogs = pygame.sprite.Group()
     dog = Dog(0, 360, 100, 100)
     dogs.add(dog)
@@ -27,7 +25,7 @@ def RunStartingVideoOfGame():
     clock = pygame.time.Clock()
 
     while running and bool(dogs):
-        surfaceDisplay.fill(COLOR_OF_SKY)
+        surface_display.fill(COLOR_OF_SKY)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -35,15 +33,15 @@ def RunStartingVideoOfGame():
         dogs.update()
         if dog.getStage() == "Landing":
 
-            dogs.draw(surfaceDisplay)
+            dogs.draw(surface_display)
 
-            surfaceDisplay.blit(bg, (0, 0))
+            surface_display.blit(background_image, (0, 0))
 
         else:
-            surfaceDisplay.blit(bg, (0, 0))
-            dogs.draw(surfaceDisplay)
+            surface_display.blit(background_image, (0, 0))
+            dogs.draw(surface_display)
 
-        screen.blit(surfaceDisplay, (0, 0))
+        screen.blit(surface_display, (0, 0))
 
         pygame.display.update()
         clock.tick(45)
@@ -51,7 +49,7 @@ def RunStartingVideoOfGame():
         quit()
 
 
-def game():
+def game(screen, surface_display, background_image):
     def runHappyDog():
         hDog.startAnimation()
 
@@ -72,7 +70,7 @@ def game():
 
     hDogs.add(hDog)
     ducks.add(duck)
-
+    all = pygame.sprite.RenderUpdates()
     all.add(ducks)
     all.add(hDogs)
     all.add(aim)
@@ -81,9 +79,9 @@ def game():
 
     clock = pygame.time.Clock()  # clock allows to do delay for repaint of screen
 
-    surfaceDisplay.fill(COLOR_OF_SKY)  # this surface is main field for paint
-    surfaceDisplay.blit(bg, START_OF_DISPLAY)
-    screen.blit(surfaceDisplay, START_OF_DISPLAY)  # show surfaceDisplay on the screen
+    surface_display.fill(COLOR_OF_SKY)  # this surface is main field for paint
+    surface_display.blit(background_image, START_OF_DISPLAY)
+    screen.blit(surface_display, START_OF_DISPLAY)  # show surfaceDisplay on the screen
 
     timerFlyingDuck = threading.Timer(DUCK_FLIGHT_TIME,
                                       duckFlyAway).start()  # Designing timer for duck. When it ticks then the duck flies away
@@ -131,19 +129,19 @@ def game():
                 if event.button == 1:  # Left button of mouse
                     if bullets > 0:
                         bullets -= 1
-                        shoot.play()  # Trigger shot sound
+                        aim.play_sound_shot()  # Trigger shot sound
                         gotin = duck.checkClick(event.pos)  # Check whether the user got into the duck
                         if gotin:
                             score.changeScore(bullets)
 
 
         # Repainting sprites
-        all.clear(screen, surfaceDisplay)
+        all.clear(screen, surface_display)
         all.update()
         dirty = all.draw(screen)
 
         # Updating screen for user
-        screen.blit(bg, START_OF_DISPLAY)
+        screen.blit(background_image, START_OF_DISPLAY)
         pygame.display.update(dirty)
 
         # Delay loop

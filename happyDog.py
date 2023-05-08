@@ -1,3 +1,5 @@
+import pygame
+from pyganim import PygAnimation
 from settings import *
 
 # Load images for create animation
@@ -6,7 +8,7 @@ dogHappyAnimation = PygAnimation(dogHappy)
 
 
 class HappyDog(pygame.sprite.Sprite):
-    containers = 0
+    containers = pygame.sprite.RenderUpdates()
 
     def __init__(self, x, y, width, height):
         # Look duck class. they are similar

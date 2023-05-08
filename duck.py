@@ -1,5 +1,8 @@
 from threading import Timer
 
+import pygame
+from pyganim import PygAnimation
+
 from settings import *
 from math import pow
 from random import randint
@@ -20,7 +23,7 @@ duckHitAnimation = PygAnimation(duckHit)
 
 
 class Duck(pygame.sprite.Sprite):
-    containers = 0
+    containers = pygame.sprite.RenderUpdates()
     ''' 
     Args: 
         ( x, y ) - position of starting of life
@@ -88,7 +91,7 @@ class Duck(pygame.sprite.Sprite):
         and set new speedX and speedY for changing angle of flight
 
         '''
-        if (self.rect.x <= -60 or self.rect.x > size[0] - self.size[0] + 60):
+        if (self.rect.x <= -60 or self.rect.x > WINDOW_HEIGHT - self.size[0] + 60):
             self.directionX *= -1
             self.animation.flip(True, False)
             self.rect.x += self.speedX * self.directionX

@@ -1,7 +1,8 @@
+import pygame
 from settings import *
 
 class Score(pygame.sprite.Sprite):
-    containers = 0
+    containers = pygame.sprite.RenderUpdates()
     def __init__(self):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.score = 0
@@ -14,7 +15,7 @@ class Score(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = 445
         self.rect.y = 515
-    def update(self, *args):
+    def update(self):
         self.surfaceScore = self.myfont.render(str(self.score), False, WHITE, (5, 5, 5))
         self.image.blit(self.surfaceScore, (50, 15))
 

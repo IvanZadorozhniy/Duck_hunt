@@ -1,3 +1,5 @@
+import pygame
+from pyganim import PygAnimation
 from settings import *
 
 #load images for create of animation
@@ -14,7 +16,7 @@ dogLandingAnimation = PygAnimation([dogJumpImg[1]])
 # TODO add a smile for Dog
 
 class Dog(pygame.sprite.Sprite):
-    containers = 0
+    containers = pygame.sprite.RenderUpdates()
 
     def __init__(self, x, y, width, height):
         pygame.sprite.Sprite.__init__(self, self.containers)
@@ -31,6 +33,7 @@ class Dog(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.stages = ["Move", "Jump", "Landing"]
+        
         self.stage = self.stages[0]
         self.animation.play()
 
