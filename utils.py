@@ -1,11 +1,15 @@
+import random
 import threading
 
-from settings import *
-from duck import *
-from dog import *
-from happyDog import *
-from Aim import *
-from Score import *
+import pygame
+from Aim import Aim
+from Score import Score
+from dog import Dog
+
+from duck import Duck
+from happyDog import HappyDog
+from settings import COLOR_OF_SKY, START_OF_DISPLAY, bg, screen, NUM_BULLETS,DUCK_FLIGHT_TIME, shoot, surfaceDisplay
+
 all = pygame.sprite.RenderUpdates()
 Duck.containers = all
 Dog.containers = all
@@ -81,7 +85,7 @@ def game():
     surfaceDisplay.blit(bg, START_OF_DISPLAY)
     screen.blit(surfaceDisplay, START_OF_DISPLAY)  # show surfaceDisplay on the screen
 
-    timerFlyingDuck = threading.Timer(duckFlightTime,
+    timerFlyingDuck = threading.Timer(DUCK_FLIGHT_TIME,
                                       duckFlyAway).start()  # Designing timer for duck. When it ticks then the duck flies away
 
     while running:
@@ -105,8 +109,8 @@ def game():
             try:
                 timerFlyingDuck.cancel()
             except Exception:
-                print("bivaet")
-            timerFlyingDuck = threading.Timer(duckFlightTime, duckFlyAway)
+                print(Exception)
+            timerFlyingDuck = threading.Timer(DUCK_FLIGHT_TIME, duckFlyAway)
             timerFlyingDuck.start()
 
         # Checking life of duck and checking launch of happy dog
@@ -121,6 +125,7 @@ def game():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION:
+                
                 aim.updatePosition(event.pos)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:  # Left button of mouse
@@ -130,15 +135,6 @@ def game():
                         gotin = duck.checkClick(event.pos)  # Check whether the user got into the duck
                         if gotin:
                             score.changeScore(bullets)
-
-        # if numbers of bullets equals null and duck is alive
-        # then duck flies away and timer will be killed
-        # if (bullets == 0 and duck.life and not duck.FlyAway):
-        #     duckFlyAway()
-        #     try:
-        #         timerFlyingDuck.cancel()
-        #     except Exception:
-        #         print("Timer slomalsya")
 
 
         # Repainting sprites

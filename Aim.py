@@ -1,6 +1,7 @@
 from settings import *
 aimImages = [("images//aim.png",0.1)]
 aimAnimation = PygAnimation(aimImages)
+
 class Aim(pygame.sprite.Sprite):
     containers = 0
 
@@ -16,7 +17,8 @@ class Aim(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.animation.play()
-    def update(self, *args):
+    
+    def update(self):
         self.image.fill(BG_COLOR_SPRITE)
         self.animation.blit(self.image, (0, 0))
 
