@@ -26,8 +26,8 @@ screen, surface_display, bg, background_music = set_up_pygame()
 
 from utils import RunStartingVideoOfGame, game
 
-if pygame.display.get_init():
-    RunStartingVideoOfGame(screen, surface_display, bg)
+# if pygame.display.get_init():
+#     RunStartingVideoOfGame(screen, surface_display, bg)
 
 if pygame.display.get_init():
     game(screen, surface_display, bg)

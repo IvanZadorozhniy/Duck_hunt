@@ -5,7 +5,7 @@ import pygame
 from Aim import Aim
 from Score import Score
 from dog import Dog
-
+from Bullets import Bullet
 from duck import Duck
 from happyDog import HappyDog
 from settings import *
@@ -63,7 +63,7 @@ def game(screen, surface_display, background_image):
     score = Score()
     hDogs = pygame.sprite.Group()
     hDog = HappyDog(270, 400, 100, 100)
-
+    bullets_panel = Bullet()
     hDogs.add(hDog)
     ducks.add(duck)
     all = pygame.sprite.RenderUpdates()
@@ -71,6 +71,7 @@ def game(screen, surface_display, background_image):
     all.add(hDogs)
     all.add(aim)
     all.add(score)
+    all.add(bullets_panel)
     running = True
 
     clock = pygame.time.Clock()  # clock allows to do delay for repaint of screen
@@ -94,12 +95,13 @@ def game(screen, surface_display, background_image):
             # restart timer
             # time.sleep(DELAY_DUCK_APPEARANCE)
 
-            duck.setPlace(random.randrange(0, 600), random.randrange(0, 200))
+            duck.setPlace(random.randrange(0, 600), random.randrange(300, 400))
 
             ducks.add(duck)
             all.add(ducks)
 
             bullets = NUM_BULLETS
+            bullets_panel.set_bullets(bullets)
             try:
                 timerFlyingDuck.cancel()
             except Exception:
@@ -125,6 +127,8 @@ def game(screen, surface_display, background_image):
                 if event.button == 1:  # Left button of mouse
                     if bullets > 0:
                         bullets -= 1
+                        bullets_panel.set_bullets(bullets)
+                        
                         aim.play_sound_shot()  # Trigger shot sound
                         gotin = duck.checkClick(event.pos)  # Check whether the user got into the duck
                         if gotin:

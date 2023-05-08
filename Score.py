@@ -6,7 +6,7 @@ class Score(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self, self.containers)
         self.score = 0
-        self.size = (130,50)
+        self.size = (120,50)
         self.image = pygame.Surface(self.size)
         self.image.fill(BLACK)
         self.myfont = pygame.font.SysFont('Duck Hunt', 30)
