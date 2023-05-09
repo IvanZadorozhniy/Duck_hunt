@@ -1,7 +1,7 @@
 
 import pygame
 
-from settings import WINDOW_HEIGHT, WINDOW_WIDHT
+from settings import BLACK, ORANGE, WHITE, WINDOW_HEIGHT, WINDOW_WIDHT, BLUE
 
 
 def set_up_pygame():
@@ -34,12 +34,56 @@ def set_up_pygame():
     return screen_, surface_display_, background_, background_music_
 
 
+def draw_start_menu(screen: pygame.Surface, surface_display: pygame.Surface, background_image: pygame.Surface):
+    screen.fill((0, 0, 0))
+    font = pygame.font.SysFont('Duck Hunt', 200, bold=True)
+    first_word_title = font.render('Duck', True, BLUE)
+    second_word_title = font.render('Hunt', True, BLUE)
+    pygame.draw.line(screen, ORANGE, (80, 190), (500, 190), 5)
+    screen.blit(first_word_title, (80, 50))
+    screen.blit(second_word_title, (160, 200))
+    
+    rect_start = pygame.draw.rect(screen,BLACK,(150, 400, 300, 60))
+    rect_exit = pygame.draw.rect(screen,BLACK,(150, 480, 300, 60))
+
+    font_menu_options = pygame.font.SysFont('Duck Hunt', 60, bold=False)
+    start_game_option = font_menu_options.render("Start Game", True, WHITE)
+    exit_game_option = font_menu_options.render("Exit Game", True, WHITE)
+    screen.blit(start_game_option, (190, 410))
+    screen.blit(exit_game_option, (190, 490))
+    mousePos = pygame.mouse.get_pos()
+    if rect_start.collidepoint(mousePos):
+        pygame.draw.polygon(screen,WHITE,((170,425),(185,430), (170,435),(170,425)))
+        
+    if rect_exit.collidepoint(mousePos):
+        pygame.draw.polygon(screen,WHITE,((170,505),(185,510), (170,515),(170,505)))
+    
+    for event in pygame.event.get():
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if rect_start.collidepoint(mousePos):
+                global game_state 
+                game_state = "Game"
+            if rect_exit.collidepoint(mousePos):
+                pygame.quit()
+                exit()
+            
+
+    pygame.display.update()
+
+
+    
 if __name__ == "__main__":
     screen, surface_display, background, background_music = set_up_pygame()
     from utils import game
     from utils import run_preview_of_game
-    if pygame.display.get_init():
-        run_preview_of_game(screen, surface_display, background)
+    game_state = "Menu"
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        if game_state == "Menu":
+            draw_start_menu(screen, surface_display, background)
 
-    if pygame.display.get_init():
-        game(screen, surface_display, background)
+        if game_state == "Game":
+            # run_preview_of_game(screen, surface_display, background)
+            game(screen, surface_display, background)

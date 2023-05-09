@@ -75,7 +75,7 @@ def game(screen, surface_display, background_image):
         if duck.life:
             round_panel.add_attempt(False)
             score.pickUp()
-            duck.flyAway()
+            duck.fly_away()
 
     pygame.mouse.set_visible(False)
     bullets = NUM_BULLETS
@@ -121,7 +121,7 @@ def game(screen, surface_display, background_image):
             # restart timer
             # time.sleep(DELAY_DUCK_APPEARANCE)
 
-            duck.setPlace(random.randrange(0, 600), random.randrange(300, 400))
+            duck.set_place(random.randrange(0, 600), random.randrange(300, 400))
 
             ducks.add(duck)
             all.add(ducks)
@@ -160,7 +160,7 @@ def game(screen, surface_display, background_image):
 
                 aim.play_sound_shot()  # Trigger shot sound
                 # Check whether the user got into the duck
-                gotin = duck.checkClick(event.pos)
+                gotin = duck.check_click(event.pos)
                 if gotin:
                     score.changeScore(bullets)
 

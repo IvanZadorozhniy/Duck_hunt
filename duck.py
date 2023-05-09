@@ -188,7 +188,7 @@ class Duck(pygame.sprite.Sprite):
 
     def check_end_life(self):
         # Kill duck if condition will be satisfied
-        if self.rect.y < -self.size[1] and self.fly_away:
+        if self.rect.y < -self.size[1] and self.is_fly_away:
             self.kill()
         if self.rect.y > 450 and not self.life:
             self.kill()
