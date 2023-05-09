@@ -8,6 +8,7 @@ dogHappy_2 = [('images//dog_happy2.png', 0.3)]
 dogHappyAnimation_1 = PygAnimation(dogHappy_1)
 dogHappyAnimation_2 = PygAnimation(dogHappy_2)
 
+
 class HappyDog(pygame.sprite.Sprite):
     containers = pygame.sprite.RenderUpdates()
 
@@ -21,7 +22,8 @@ class HappyDog(pygame.sprite.Sprite):
 
         self.image = pygame.Surface(self.size)
         self.image.fill(BG_COLOR_SPRITE)
-        self.image.set_colorkey(BG_COLOR_SPRITE) # using another color because image with dog found in another place
+        # using another color because image with dog found in another place
+        self.image.set_colorkey(BG_COLOR_SPRITE)
         self.speed = SPEED_OF_DOG
         self.rect = self.image.get_rect()
         self.rect.x = x
@@ -47,7 +49,7 @@ class HappyDog(pygame.sprite.Sprite):
                 self.run = False
                 self.rect.y = 401
                 self.directionY = 1
-                n = random.randint(1,3) % 3
+                n = random.randint(1, 3) % 3
                 if n == 0:
                     self.animation.stop()
                     self.animation = dogHappyAnimation_2
@@ -59,8 +61,9 @@ class HappyDog(pygame.sprite.Sprite):
                     self.animation.scale(self.size)
                     self.animation.play()
         else:
-            
+
             self.endAnimation = False
-    
+
     def startAnimation(self):
-        self.run = True # using this variable for showing to main threads that it can create a new duck
+        # using this variable for showing to main threads that it can create a new duck
+        self.run = True

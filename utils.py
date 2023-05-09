@@ -2,46 +2,66 @@ import random
 import threading
 
 import pygame
-from Aim import Aim
-from Score import Score
-from dog import Dog
+
+from aim import Aim
 from Bullets import Bullet
+from dog import Dog
 from duck import Duck
 from happyDog import HappyDog
-from settings import *
+from Score import Score
+from settings import (COLOR_OF_SKY, DUCK_FLIGHT_TIME, FPS, NUM_BULLETS,
+                      START_OF_DISPLAY)
 
-
-import pygame
 # from pyganim import *
 
 
+def run_preview_of_game(screen: pygame.Surface, surface_display: pygame.Surface, background_image: pygame.Surface) -> None:
+    """Run a preview of the game.
 
-def RunStartingVideoOfGame(screen, surface_display, background_image):
-    dogs = pygame.sprite.Group()
-    dog = Dog(0, 360, 100, 100)
+    Args:
+        screen (pygame.Surface): The surface to draw the game onto.
+        surface_display (pygame.Surface): The surface to draw the game elements onto.
+        background_image (pygame.Surface): The background image of the game.
+
+    Returns:
+        None
+    """
+    # Create a group of dogs and add a dog to it
+    dogs: pygame.sprite.Group[Dog] = pygame.sprite.Group()
+    dog: Dog = Dog(0, 360, 100, 100)
     dogs.add(dog)
 
-    running = True
-    clock = pygame.time.Clock()
+    running: bool = True
+    clock: pygame.time.Clock = pygame.time.Clock()
 
+    # Run the game until it's no longer running or there are no more dogs
     while running and bool(dogs):
+        # Fill the surface display with the color of the sky
         surface_display.fill(COLOR_OF_SKY)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
+
+        # Update the dogs and check if they are before or after the background
         dogs.update()
         if dog.is_before_background:
+            # If the dog is before the background, draw the dogs and then the background
             dogs.draw(surface_display)
             surface_display.blit(background_image, (0, 0))
         else:
+            # If the dog is after the background, draw the background and then the dogs
             surface_display.blit(background_image, (0, 0))
             dogs.draw(surface_display)
 
-
+        # Draw the surface display onto the screen and update the display
         screen.blit(surface_display, (0, 0))
         pygame.display.update()
+
+        # Tick the clock to maintain the FPS
         clock.tick(FPS)
+
+    # If the game is no longer running, quit the game
     if not running:
         quit()
 
@@ -54,6 +74,7 @@ def game(screen, surface_display, background_image):
         if duck.life:
             score.pickUp()
             duck.flyAway()
+
     pygame.mouse.set_visible(False)
     bullets = NUM_BULLETS
     score = 0
@@ -78,10 +99,11 @@ def game(screen, surface_display, background_image):
 
     surface_display.fill(COLOR_OF_SKY)  # this surface is main field for paint
     surface_display.blit(background_image, START_OF_DISPLAY)
-    screen.blit(surface_display, START_OF_DISPLAY)  # show surfaceDisplay on the screen
+    # show surfaceDisplay on the screen
+    screen.blit(surface_display, START_OF_DISPLAY)
 
-    timerFlyingDuck = threading.Timer(DUCK_FLIGHT_TIME,
-                                      duckFlyAway).start()  # Designing timer for duck. When it ticks then the duck flies away
+    # Designing timer for duck. When it ticks then the duck flies away
+    threading.Timer(DUCK_FLIGHT_TIME, duckFlyAway).start()
 
     while running:
 
@@ -121,19 +143,21 @@ def game(screen, surface_display, background_image):
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.MOUSEMOTION:
-                
-                aim.updatePosition(event.pos)
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:  # Left button of mouse
-                    if bullets > 0:
-                        bullets -= 1
-                        bullets_panel.set_bullets(bullets)
-                        
-                        aim.play_sound_shot()  # Trigger shot sound
-                        gotin = duck.checkClick(event.pos)  # Check whether the user got into the duck
-                        if gotin:
-                            score.changeScore(bullets)
 
+                aim.updatePosition(event.pos)
+            if (
+                event.type == pygame.MOUSEBUTTONDOWN
+                and event.button == 1
+                and bullets > 0
+            ):
+                bullets -= 1
+                bullets_panel.set_bullets(bullets)
+
+                aim.play_sound_shot()  # Trigger shot sound
+                # Check whether the user got into the duck
+                gotin = duck.checkClick(event.pos)
+                if gotin:
+                    score.changeScore(bullets)
 
         # Repainting sprites
         all.clear(screen, surface_display)

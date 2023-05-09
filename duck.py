@@ -9,13 +9,16 @@ from random import randint
 from time import sleep
 
 # Load images for creating of animations
-duckMoveHorizontal = [('images//duckBlack' + str(num) + ".png", 0.15) for num in range(1, 4)]
+duckMoveHorizontal = [('images//duckBlack' + str(num) + ".png", 0.15)
+                      for num in range(1, 4)]
 duckHorizontalAnimation = PygAnimation(duckMoveHorizontal)
 
-duckFlyAngle = [('images//duckBlack' + str(num) + ".png", 0.15) for num in range(4, 7)]
+duckFlyAngle = [('images//duckBlack' + str(num) + ".png", 0.15)
+                for num in range(4, 7)]
 duckFlyAngleAnimation = PygAnimation(duckFlyAngle)
 
-duckWounded = [('images//duckBlack' + str(num) + ".png", 0.25) for num in range(7, 9)]
+duckWounded = [('images//duckBlack' + str(num) + ".png", 0.25)
+               for num in range(7, 9)]
 duckWoundedAnimation = PygAnimation(duckWounded)
 
 duckHit = [('images//duckBlack9.png', 0.25)]
@@ -39,6 +42,7 @@ class Duck(pygame.sprite.Sprite):
         life - (true or false) do myself have a life?
         FlyAway - (true or false) did duck fly away?
     '''
+
     def __init__(self, x, y, width, height):
         pygame.sprite.Sprite.__init__(self, self.containers)
 
@@ -113,8 +117,9 @@ class Duck(pygame.sprite.Sprite):
     def checkClick(self, pos):
         # Check if a user has hit a bird
         heightForRect = HEIGHT_RECT_AIM
-        #create rect for more often hit in the duck
-        CheckRect = pygame.Rect(pos[0]-heightForRect,pos[1]-heightForRect,heightForRect*2,heightForRect*2)
+        # create rect for more often hit in the duck
+        CheckRect = pygame.Rect(
+            pos[0]-heightForRect, pos[1]-heightForRect, heightForRect*2, heightForRect*2)
         if self.rect.contains(CheckRect):
             print("Kill")
             print(CheckRect)
