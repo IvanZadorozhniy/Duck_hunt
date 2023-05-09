@@ -29,8 +29,8 @@ if __name__ == "__main__":
     screen, surface_display, background, background_music = set_up_pygame()
     from utils import game
     from utils import run_preview_of_game
-    if pygame.display.get_init():
-        run_preview_of_game(screen, surface_display, background)
+    # if pygame.display.get_init():
+    #     run_preview_of_game(screen, surface_display, background)
 
     if pygame.display.get_init():
         game(screen, surface_display, background)

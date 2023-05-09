@@ -9,6 +9,7 @@ from dog import Dog
 from duck import Duck
 from happyDog import HappyDog
 from Score import Score
+from round_panel import RoundPanel
 from settings import (COLOR_OF_SKY, DUCK_FLIGHT_TIME, FPS, NUM_BULLETS,
                       START_OF_DISPLAY)
 
@@ -72,6 +73,7 @@ def game(screen, surface_display, background_image):
 
     def duckFlyAway():
         if duck.life:
+            round_panel.add_attempt(False)
             score.pickUp()
             duck.flyAway()
 
@@ -85,6 +87,7 @@ def game(screen, surface_display, background_image):
     hDogs = pygame.sprite.Group()
     hDog = HappyDog(270, 400, 100, 100)
     bullets_panel = Bullet()
+    round_panel = RoundPanel()
     hDogs.add(hDog)
     ducks.add(duck)
     all = pygame.sprite.RenderUpdates()
@@ -93,6 +96,7 @@ def game(screen, surface_display, background_image):
     all.add(aim)
     all.add(score)
     all.add(bullets_panel)
+    all.add(round_panel)
     running = True
 
     clock = pygame.time.Clock()  # clock allows to do delay for repaint of screen
@@ -137,6 +141,7 @@ def game(screen, surface_display, background_image):
         # and the happy dog is not running
         # then run the happy dog
         if not duck.alive() and not hDog.run and not duck.life:
+            round_panel.add_attempt(True)
             runHappyDog()
 
         for event in pygame.event.get():
@@ -173,6 +178,7 @@ def game(screen, surface_display, background_image):
 
     if not running:
         quit()
+
 
 
 def quit():
