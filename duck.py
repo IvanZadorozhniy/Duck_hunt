@@ -1,28 +1,28 @@
+from math import pow
+from random import randint
 from threading import Timer
 
 import pygame
-from pyganim import PygAnimation
 
-from settings import *
-from math import pow
-from random import randint
-from time import sleep
+from pyganim import PygAnimation
+from settings import (BG_COLOR_SPRITE, HEIGHT_RECT_AIM, SPEED_DUCK,
+                      SPEED_OF_FALLING_OF_DUCK, WINDOW_HEIGHT)
 
 # Load images for creating of animations
-duckMoveHorizontal = [('images//duckBlack' + str(num) + ".png", 0.15)
+duck_move_horizontal = [('images//duckBlack' + str(num) + ".png", 0.15)
                       for num in range(1, 4)]
-duckHorizontalAnimation = PygAnimation(duckMoveHorizontal)
+duck_horizontal_animation = PygAnimation(duck_move_horizontal)
 
-duckFlyAngle = [('images//duckBlack' + str(num) + ".png", 0.15)
+duck_fly_angle = [('images//duckBlack' + str(num) + ".png", 0.15)
                 for num in range(4, 7)]
-duckFlyAngleAnimation = PygAnimation(duckFlyAngle)
+duck_fly_angle_animation = PygAnimation(duck_fly_angle)
 
-duckWounded = [('images//duckBlack' + str(num) + ".png", 0.25)
+duck_wounded = [('images//duckBlack' + str(num) + ".png", 0.25)
                for num in range(7, 9)]
-duckWoundedAnimation = PygAnimation(duckWounded)
+duck_wounded_animation = PygAnimation(duck_wounded)
 
-duckHit = [('images//duckBlack9.png', 0.25)]
-duckHitAnimation = PygAnimation(duckHit)
+duck_hit = [('images//duckBlack9.png', 0.25)]
+duck_hit_animation = PygAnimation(duck_hit)
 
 
 class Duck(pygame.sprite.Sprite):
@@ -37,16 +37,16 @@ class Duck(pygame.sprite.Sprite):
         image - surface of sprite
         rect - determines position of sprite
         speed - speed of duck 
-        speedX and speedY - duck speed on the axes
-        directionX and directionY - determines direction of flight of duck
+        speed_x and speed_y - duck speed on the axes
+        direction_x and direction_y - determines direction of flight of duck
         life - (true or false) do myself have a life?
-        FlyAway - (true or false) did duck fly away?
+        fly_away - (true or false) did duck fly away?
     '''
 
-    def __init__(self, x, y, width, height):
+    def __init__(self, start_pos_x, start_pos_y, width, height):
         pygame.sprite.Sprite.__init__(self, self.containers)
 
-        self.animation = duckFlyAngleAnimation
+        self.animation = duck_fly_angle_animation
         self.size = (width, height)
 
         self.animation.scale(self.size)
@@ -56,18 +56,18 @@ class Duck(pygame.sprite.Sprite):
         self.image.set_colorkey(BG_COLOR_SPRITE)
 
         self.rect = self.image.get_rect()
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.x = start_pos_x
+        self.rect.y = start_pos_y
 
         self.speed = SPEED_DUCK
-        self.speedX = randint(2, (SPEED_DUCK-1))
-        self.speedY = self.speedXY()
+        self.speed_x = randint(2, (SPEED_DUCK-1))
+        self.speed_y = self.speed_xy()
 
-        self.directionX = 1
-        self.directionY = 1
+        self.direction_x = 1
+        self.direction_y = 1
 
         self.life = True
-        self.FlyAway = False
+        self.is_fly_away = False
 
         self.animation.play()
 
@@ -83,117 +83,112 @@ class Duck(pygame.sprite.Sprite):
         self.animation.blit(self.image, (0, 0))
 
         if self.alive():
-            self.changeDirection()
+            self.change_direction()
 
-        self.rect.x += self.speedX * self.directionX
-        self.rect.y += self.speedY * self.directionY
-        self.checkEndLife()
+        self.rect.x += self.speed_x * self.direction_x
+        self.rect.y += self.speed_y * self.direction_y
+        self.check_end_life()
 
-    def changeDirection(self):
+    def change_direction(self):
         '''
         if the duck got to the border then change its direction
-        and set new speedX and speedY for changing angle of flight
+        and set new speed_x and speed_y for changing angle of flight
 
         '''
         if (self.rect.x <= -60 or self.rect.x > WINDOW_HEIGHT - self.size[0] + 60):
-            self.directionX *= -1
+            self.direction_x *= -1
             self.animation.flip(True, False)
-            self.rect.x += self.speedX * self.directionX
-            self.rect.y += self.speedY * self.directionY
-            self.speedX = randint(2, (SPEED_DUCK-1))
-            self.speedY = self.speedXY()
+            self.rect.x += self.speed_x * self.direction_x
+            self.rect.y += self.speed_y * self.direction_y
+            self.speed_x = randint(2, (SPEED_DUCK-1))
+            self.speed_y = self.speed_xy()
 
         if (self.rect.y <= -60 or self.rect.y > 450):
-            self.directionY *= -1
-            self.rect.x += self.speedX * self.directionX
-            self.rect.y += self.speedY * self.directionY
-            self.speedX = randint(2, (SPEED_DUCK-1))
-            self.speedY = self.speedXY()
+            self.direction_y *= -1
+            self.rect.x += self.speed_x * self.direction_x
+            self.rect.y += self.speed_y * self.direction_y
+            self.speed_x = randint(2, (SPEED_DUCK-1))
+            self.speed_y = self.speed_xy()
 
-    def speedXY(self):
+    def speed_xy(self):
         # Used a formula for constant speed moving when change a direction
-        return pow(self.speed * self.speed - self.speedX * self.speedX, 1 / 2)
+        return pow(self.speed * self.speed - self.speed_x * self.speed_x, 1 / 2)
 
-    def checkClick(self, pos):
-        # Check if a user has hit a bird
-        heightForRect = HEIGHT_RECT_AIM
+    def check_click(self, pos):
         # create rect for more often hit in the duck
-        CheckRect = pygame.Rect(
-            pos[0]-heightForRect, pos[1]-heightForRect, heightForRect*2, heightForRect*2)
-        if self.rect.contains(CheckRect):
-            print("Kill")
-            print(CheckRect)
-            print(self.rect)
+        aim_rect = pygame.Rect(
+            pos[0]-HEIGHT_RECT_AIM, pos[1]-HEIGHT_RECT_AIM, HEIGHT_RECT_AIM*2, HEIGHT_RECT_AIM*2)
+        if self.rect.contains(aim_rect):
             self.life = False
-            self.directionX = 0
-            self.directionY = 0
+            self.direction_x = 0
+            self.direction_y = 0
             self.animation.stop()
             # Change animation
-            duckHitAnimation.scale(self.size)
-            self.animation = duckHitAnimation
+            duck_hit_animation.scale(self.size)
+            self.animation = duck_hit_animation
             self.animation.play()
             # Timer for launch falling of duck
-            timer = Timer(1.0, self.startFalling)
+            timer = Timer(1.0, self.start_falling)
             timer.start()
             return True
         else:
             return False
 
-    def startFalling(self):
+    def start_falling(self):
         '''
         Method launches animation of falling of duck
 
         '''
-        self.directionX = 0
-        self.directionY = 1
-        self.speedY = SPEED_OF_FALLING_OF_DUCK
+        self.direction_x = 0
+        self.direction_y = 1
+        self.speed_y = SPEED_OF_FALLING_OF_DUCK
         self.animation.stop()
-        duckWoundedAnimation.scale(self.size)
-        self.animation = duckWoundedAnimation
+        duck_wounded_animation.scale(self.size)
+        self.animation = duck_wounded_animation
         self.animation.play()
 
-    def setPlace(self, x, y):
+    def set_place(self, pos_x, pos_y):
         '''
         (x,y) - new position of duck
          Function sets new position for duck.
          It uses when need create new duck without delete current duck
         '''
-        self.rect.x = x
-        self.rect.y = y
+        self.rect.x = pos_x
+        self.rect.y = pos_y
 
-        duckFlyAngleAnimation.clearTransforms()
+        duck_fly_angle_animation.clearTransforms()
 
-        self.animation = duckFlyAngleAnimation
+        self.animation = duck_fly_angle_animation
         self.animation.scale(self.size)
 
         # Set orientation duck in space
-        if x < 0:
-            self.directionX = 1
+        if pos_x < 0:
+            self.direction_x = 1
         else:
-            self.directionX = -1
+            self.direction_x = -1
             self.animation.flip(True, False)
-        if y < 0:
-            self.directionY = 1
+        if pos_y < 0:
+            self.direction_y = 1
         else:
-            self.directionY = -1
+            self.direction_y = -1
 
         self.animation.play()
         self.speed = SPEED_DUCK
-        self.speedX = randint(2, (SPEED_DUCK-1))
-        self.speedY = self.speedXY()
+        self.speed_x = randint(2, (SPEED_DUCK-1))
+        self.speed_y = self.speed_xy()
 
         self.life = True
-        self.FlyAway = False
+        self.is_fly_away = False
 
-    def flyAway(self):
+    def fly_away(self):
         # Launch of flying away of duck
-        self.directionY = -1
-        self.directionX = 0
-        self.FlyAway = True
+        self.direction_y = -1
+        self.direction_x = 0
+        self.is_fly_away = True
 
-    def checkEndLife(self):
+    def check_end_life(self):
         # Kill duck if condition will be satisfied
-        if self.rect.y < -self.size[1] and self.FlyAway:
+        if self.rect.y < -self.size[1] and self.fly_away:
             self.kill()
         if self.rect.y > 450 and not self.life:
             self.kill()
