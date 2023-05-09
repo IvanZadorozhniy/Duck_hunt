@@ -4,7 +4,7 @@ import threading
 import pygame
 
 from aim import Aim
-from Bullets import Bullet
+from bullet_panel import Bullet
 from dog import Dog
 from duck import Duck
 from happyDog import HappyDog
@@ -149,7 +149,7 @@ def game(screen, surface_display, background_image):
                 running = False
             if event.type == pygame.MOUSEMOTION:
 
-                aim.updatePosition(event.pos)
+                aim.update_position(event.pos)
             if (
                 event.type == pygame.MOUSEBUTTONDOWN
                 and event.button == 1
