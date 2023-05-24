@@ -16,7 +16,7 @@ HORIZONTAL_POSTION_BULLET = 2
 def get_position_bullet(num_bullet):
     return (INTEND_BULLET+STEP_BETWEEN_BULLET*num_bullet, HORIZONTAL_POSTION_BULLET)
 
-class Bullet(pygame.sprite.Sprite):
+class BulletPanel(pygame.sprite.Sprite):
     containers = pygame.sprite.RenderUpdates()
 
     def __init__(self):
@@ -39,7 +39,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.y = POSITION_PANEL[1]
 
     def update(self):
-        self.image.fill(BLACK)
+        
         self.image.blit(self.surface_shot, POSITION_TEXT)
         for num_bullet in range(self.bullets):
             self.image.blit(self.bullet_surface, get_position_bullet(num_bullet))
@@ -53,3 +53,10 @@ class Bullet(pygame.sprite.Sprite):
         """
 
         self.bullets = bullets
+    
+    @staticmethod
+    def draw_background(surface):
+        pygame.draw.rect(surface, 
+                         BLACK, 
+                         (POSITION_PANEL[0], POSITION_PANEL[1], SIZE_PANEL[0], SIZE_PANEL[1]),
+                         )

@@ -1,5 +1,7 @@
 import pygame
-from settings import *
+
+from settings import BLACK, WHITE
+
 
 
 class Score(pygame.sprite.Sprite):
@@ -20,7 +22,6 @@ class Score(pygame.sprite.Sprite):
         self.rect.y = 515
 
     def update(self):
-        self.image.fill(BLACK)
         self.surfaceScore = self.myfont.render(
             str(self.score), False, WHITE, (5, 5, 5))
         self.image.blit(self.surfaceScore, (50, 15))
@@ -39,3 +40,7 @@ class Score(pygame.sprite.Sprite):
 
     def getScore(self):
         return self.score
+    
+    @staticmethod
+    def draw_background(surface):
+        pygame.draw.rect(surface,BLACK,(445, 515, 120, 50)) 

@@ -43,6 +43,7 @@ class Dog(pygame.sprite.Sprite):
         self.image.fill(BG_COLOR_SPRITE)
         self.animation.blit(self.image, (0, 0))
         self.__check_animation()
+        
 
     def __check_animation(self):
         # check the animation and change them according to the conditions

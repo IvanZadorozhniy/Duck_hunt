@@ -4,17 +4,44 @@ import threading
 import pygame
 
 from aim import Aim
-from bullet_panel import Bullet
+from bullet_panel import BulletPanel
 from dog import Dog
 from duck import Duck
 from happyDog import HappyDog
 from Score import Score
 from round_panel import RoundPanel
-from settings import (COLOR_OF_SKY, DUCK_FLIGHT_TIME, FPS, NUM_BULLETS,
+from settings import (BLACK, COLOR_OF_SKY, DUCK_FLIGHT_TIME, FPS, NUM_BULLETS,
                       START_OF_DISPLAY)
 
 # from pyganim import *
+SCENE_START_POSITION = (0,0)
+BG_IMAGE_POSITION = (0, 0)
+DOG_START_POSITION = (0, 360)
+DOG_SPRITE_SIZE = (100, 100)
 
+
+def draw_sky(surface):
+    surface.fill(COLOR_OF_SKY)
+
+
+def draw_background_panels(surface):
+    Score.draw_background(surface)
+    RoundPanel.draw_background(surface)
+    BulletPanel.draw_background(surface)
+
+
+def draw_background_image_with_dog(surface, dogs, dog, bg_image):
+    dogs.update()
+    match dog.is_before_background:
+        case True:
+            dogs.draw(surface)
+            draw_background_image(surface, bg_image)
+        case False:
+            draw_background_image(surface, bg_image)
+            dogs.draw(surface)
+
+def draw_background_image(surface, bg_image):
+    surface.blit(bg_image, BG_IMAGE_POSITION)
 
 def run_preview_of_game(screen: pygame.Surface, surface_display: pygame.Surface, background_image: pygame.Surface) -> None:
     """Run a preview of the game.
@@ -27,38 +54,36 @@ def run_preview_of_game(screen: pygame.Surface, surface_display: pygame.Surface,
     Returns:
         None
     """
+    
+        
     # Create a group of dogs and add a dog to it
     dogs: pygame.sprite.Group[Dog] = pygame.sprite.Group()
-    dog: Dog = Dog(0, 360, 100, 100)
+    dog: Dog = Dog(
+        DOG_START_POSITION[0],
+        DOG_START_POSITION[1],
+        DOG_SPRITE_SIZE[0],
+        DOG_SPRITE_SIZE[1]
+    )
     dogs.add(dog)
 
     running: bool = True
     clock: pygame.time.Clock = pygame.time.Clock()
-
     # Run the game until it's no longer running or there are no more dogs
     while running and bool(dogs):
         # Fill the surface display with the color of the sky
-        surface_display.fill(COLOR_OF_SKY)
+        # Fill the panels by Black color
+        # Update the dogs and check if they are before or after the background
+        draw_sky(surface_display)
+        draw_background_panels(surface_display)
+        draw_background_image_with_dog(surface_display, dogs, dog, background_image)
 
+        # Draw the surface display onto the screen and update the display
+        screen.blit(surface_display, SCENE_START_POSITION)
+        pygame.display.update()
+        
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        # Update the dogs and check if they are before or after the background
-        dogs.update()
-        if dog.is_before_background:
-            # If the dog is before the background, draw the dogs and then the background
-            dogs.draw(surface_display)
-            surface_display.blit(background_image, (0, 0))
-        else:
-            # If the dog is after the background, draw the background and then the dogs
-            surface_display.blit(background_image, (0, 0))
-            dogs.draw(surface_display)
-
-        # Draw the surface display onto the screen and update the display
-        screen.blit(surface_display, (0, 0))
-        pygame.display.update()
-
         # Tick the clock to maintain the FPS
         clock.tick(FPS)
 
@@ -76,33 +101,37 @@ def game(screen, surface_display, background_image):
             round_panel.add_attempt(False)
             score.pickUp()
             duck.fly_away()
-
-    pygame.mouse.set_visible(False)
-    bullets = NUM_BULLETS
-    score = 0
+    
+ 
     ducks = pygame.sprite.Group()
     duck = Duck(-40, -40, 55, 55)
     aim = Aim(-40, -40)
     score = Score()
     hDogs = pygame.sprite.Group()
     hDog = HappyDog(270, 400, 100, 100)
-    bullets_panel = Bullet()
+    bullets_panel = BulletPanel()
     round_panel = RoundPanel()
     hDogs.add(hDog)
     ducks.add(duck)
-    all = pygame.sprite.RenderUpdates()
-    all.add(ducks)
-    all.add(hDogs)
-    all.add(aim)
-    all.add(score)
-    all.add(bullets_panel)
-    all.add(round_panel)
+    all_sprites = pygame.sprite.RenderUpdates()
+    all_sprites.add(ducks)
+    all_sprites.add(hDogs)
+    all_sprites.add(aim)
+    all_sprites.add(score)
+    all_sprites.add(bullets_panel)
+    all_sprites.add(round_panel)
+
+    
+    bullets = NUM_BULLETS
+        
+    pygame.mouse.set_visible(False)
     running = True
 
     clock = pygame.time.Clock()  # clock allows to do delay for repaint of screen
 
-    surface_display.fill(COLOR_OF_SKY)  # this surface is main field for paint
-    surface_display.blit(background_image, START_OF_DISPLAY)
+    draw_sky(surface_display)
+    draw_background_image(surface_display, background_image)
+    
     # show surfaceDisplay on the screen
     screen.blit(surface_display, START_OF_DISPLAY)
 
@@ -121,7 +150,8 @@ def game(screen, surface_display, background_image):
             # restart timer
             # time.sleep(DELAY_DUCK_APPEARANCE)
 
-            duck.set_place(random.randrange(0, 600), random.randrange(300, 400))
+            duck.set_place(random.randrange(0, 600),
+                           random.randrange(300, 400))
 
             ducks.add(duck)
             all.add(ducks)
@@ -165,12 +195,12 @@ def game(screen, surface_display, background_image):
                     score.changeScore(bullets)
 
         # Repainting sprites
-        all.clear(screen, surface_display)
-        all.update()
-        dirty = all.draw(screen)
+        all_sprites.clear(screen, surface_display)
+        all_sprites.update()
+        dirty = all_sprites.draw(screen)
 
         # Updating screen for user
-        screen.blit(background_image, START_OF_DISPLAY)
+        screen.blit(background_image, SCENE_START_POSITION)
         pygame.display.update(dirty)
 
         # Delay loop
@@ -178,7 +208,6 @@ def game(screen, surface_display, background_image):
 
     if not running:
         quit()
-
 
 
 def quit():

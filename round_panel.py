@@ -5,7 +5,7 @@ from settings import BLACK, GREEN, RED
 PATH_DUCK_ICON = 'images/duck_icon.png'
 SIZE_PANEL = (300, 50)
 SIZE_ICON = (15, 15)
-POSITON_PANEL = (140, 515)
+POSITION_PANEL = (140, 515)
 HORIZONTAL_POSITION_DUCK_ICON = 2
 MAX_DUCKS = 10
 
@@ -23,11 +23,10 @@ class RoundPanel(pygame.sprite.Sprite):
         self.fail_duck_icon = change_color(self.duck_icon, RED)
         self.attempts = []
         self.rect = self.image.get_rect()
-        self.rect.x = POSITON_PANEL[0]
-        self.rect.y = POSITON_PANEL[1]
+        self.rect.x = POSITION_PANEL[0]
+        self.rect.y = POSITION_PANEL[1]
 
     def update(self):
-        self.image.fill(BLACK)
         self.image.blit(self.duck_icon, (100, 2))
         for i, attempt in enumerate(self.attempts):
             chooosen_icon = self.success_duck_icon if attempt else self.fail_duck_icon
@@ -42,6 +41,13 @@ class RoundPanel(pygame.sprite.Sprite):
 
     def clean_panel(self):
         self.attempts.clear()
+
+    @staticmethod
+    def draw_background(surface):
+        pygame.draw.rect(surface, 
+                         BLACK, 
+                         (POSITION_PANEL[0], POSITION_PANEL[1], SIZE_PANEL[0], SIZE_PANEL[1]),
+                         )
 
 
 def change_color(image, color):

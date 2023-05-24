@@ -35,6 +35,16 @@ def set_up_pygame():
 
 
 def draw_start_menu(screen: pygame.Surface, surface_display: pygame.Surface, background_image: pygame.Surface):
+    """
+    Initializes Pygame and sets up the game window, background, and music.
+
+    Returns:
+    - screen_ (pygame.Surface): the game window surface
+    - surface_display_ (pygame.Surface): a surface to display objects on before adding to the game window
+    - background_ (pygame.Surface): the game background surface
+    - background_music_ (pygame.mixer.Sound): the game background music
+    """
+
     screen.fill((0, 0, 0))
     font = pygame.font.SysFont('Duck Hunt', 200, bold=True)
     first_word_title = font.render('Duck', True, BLUE)
