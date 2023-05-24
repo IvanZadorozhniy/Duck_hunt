@@ -114,7 +114,7 @@ class Duck(pygame.sprite.Sprite):
         # Used a formula for constant speed moving when change a direction
         return pow(self.speed * self.speed - self.speed_x * self.speed_x, 1 / 2)
 
-    def check_click(self, pos):
+    def is_hit(self, pos):
         # create rect for more often hit in the duck
         aim_rect = pygame.Rect(
             pos[0]-HEIGHT_RECT_AIM, pos[1]-HEIGHT_RECT_AIM, HEIGHT_RECT_AIM*2, HEIGHT_RECT_AIM*2)

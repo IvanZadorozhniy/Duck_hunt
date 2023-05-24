@@ -27,6 +27,7 @@ class RoundPanel(pygame.sprite.Sprite):
         self.rect.y = POSITION_PANEL[1]
 
     def update(self):
+        self.image.fill(BLACK)
         self.image.blit(self.duck_icon, (100, 2))
         for i, attempt in enumerate(self.attempts):
             chooosen_icon = self.success_duck_icon if attempt else self.fail_duck_icon

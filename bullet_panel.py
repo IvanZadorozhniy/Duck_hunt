@@ -39,7 +39,7 @@ class BulletPanel(pygame.sprite.Sprite):
         self.rect.y = POSITION_PANEL[1]
 
     def update(self):
-        
+        self.image.fill(BLACK)
         self.image.blit(self.surface_shot, POSITION_TEXT)
         for num_bullet in range(self.bullets):
             self.image.blit(self.bullet_surface, get_position_bullet(num_bullet))
