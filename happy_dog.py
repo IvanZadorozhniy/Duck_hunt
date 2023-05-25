@@ -2,6 +2,8 @@ import pygame
 from pyganim import PygAnimation
 from settings import *
 import random
+
+from sprite_changer_mixin import SpriteChangerMixin
 # Load images for create animation
 dogHappy_1 = [('images//dog_happy1.png', 0.3)]
 dogHappy_2 = [('images//dog_happy2.png', 0.3)]
@@ -9,7 +11,7 @@ dogHappyAnimation_1 = PygAnimation(dogHappy_1)
 dogHappyAnimation_2 = PygAnimation(dogHappy_2)
 
 
-class HappyDog(pygame.sprite.Sprite):
+class HappyDog(pygame.sprite.Sprite, SpriteChangerMixin):
     containers = pygame.sprite.RenderUpdates()
 
     def __init__(self, x, y, width, height):
@@ -49,16 +51,10 @@ class HappyDog(pygame.sprite.Sprite):
                 self.rect.y = 401
                 self.directionY = 1
                 n = random.randint(1, 3) % 3
-                if n == 0:
-                    self.animation.stop()
-                    self.animation = dogHappyAnimation_2
-                    self.animation.scale(self.size)
-                    self.animation.play()
+                if n == 2:
+                    self._change_animation(dogHappyAnimation_2)
                 else:
-                    self.animation.stop()
-                    self.animation = dogHappyAnimation_1
-                    self.animation.scale(self.size)
-                    self.animation.play()
+                    self._change_animation(dogHappyAnimation_1)
         else:
 
             self.endAnimation = False

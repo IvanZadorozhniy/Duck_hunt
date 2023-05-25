@@ -7,6 +7,7 @@ import pygame
 from pyganim import PygAnimation
 from settings import (BG_COLOR_SPRITE, HEIGHT_RECT_AIM, SPEED_DUCK,
                       SPEED_OF_FALLING_OF_DUCK, WINDOW_HEIGHT)
+from sprite_changer_mixin import SpriteChangerMixin
 
 # Load images for creating of animations
 duck_move_horizontal = [('images//duckBlack' + str(num) + ".png", 0.15)
@@ -25,7 +26,7 @@ duck_hit = [('images//duckBlack9.png', 0.25)]
 duck_hit_animation = PygAnimation(duck_hit)
 
 
-class Duck(pygame.sprite.Sprite):
+class Duck(pygame.sprite.Sprite, SpriteChangerMixin):
     containers = pygame.sprite.RenderUpdates()
     ''' 
     Args: 
@@ -117,23 +118,24 @@ class Duck(pygame.sprite.Sprite):
     def is_hit(self, pos):
         # create rect for more often hit in the duck
         aim_rect = pygame.Rect(
-            pos[0]-HEIGHT_RECT_AIM, pos[1]-HEIGHT_RECT_AIM, HEIGHT_RECT_AIM*2, HEIGHT_RECT_AIM*2)
-        if self.rect.contains(aim_rect):
-            self.life = False
-            self.direction_x = 0
-            self.direction_y = 0
-            self.animation.stop()
-            # Change animation
-            duck_hit_animation.scale(self.size)
-            self.animation = duck_hit_animation
-            self.animation.play()
-            # Timer for launch falling of duck
-            timer = Timer(1.0, self.start_falling)
-            timer.start()
-            return True
-        else:
+            pos[0]-HEIGHT_RECT_AIM, 
+            pos[1]-HEIGHT_RECT_AIM, 
+            HEIGHT_RECT_AIM*2, 
+            HEIGHT_RECT_AIM*2
+        )
+    
+        if not self.rect.contains(aim_rect):
             return False
-
+    
+        
+        self.life = False
+        self.direction_x = 0
+        self.direction_y = 0
+        self._change_animation(duck_hit_animation)
+        # Timer for launch falling of duck
+        Timer(1.0, self.start_falling).start()
+        return True
+        
     def start_falling(self):
         '''
         Method launches animation of falling of duck
@@ -142,10 +144,8 @@ class Duck(pygame.sprite.Sprite):
         self.direction_x = 0
         self.direction_y = 1
         self.speed_y = SPEED_OF_FALLING_OF_DUCK
-        self.animation.stop()
-        duck_wounded_animation.scale(self.size)
-        self.animation = duck_wounded_animation
-        self.animation.play()
+        self._change_animation(duck_wounded_animation)
+  
 
     def set_place(self, pos_x, pos_y):
         '''
@@ -157,9 +157,10 @@ class Duck(pygame.sprite.Sprite):
         self.rect.y = pos_y
 
         duck_fly_angle_animation.clearTransforms()
+        
+        self._change_animation(duck_fly_angle_animation)
 
-        self.animation = duck_fly_angle_animation
-        self.animation.scale(self.size)
+
 
         # Set orientation duck in space
         if pos_x < 0:
@@ -172,7 +173,7 @@ class Duck(pygame.sprite.Sprite):
         else:
             self.direction_y = -1
 
-        self.animation.play()
+        
         self.speed = SPEED_DUCK
         self.speed_x = randint(2, (SPEED_DUCK-1))
         self.speed_y = self.speed_xy()
