@@ -17,7 +17,6 @@ dog_jump_images = [(f'images//dog_jump{num}.png', 0.1) for num in range(1, 3)]
 dog_jump_animation = PygAnimation([dog_jump_images[0]])
 dog_landing_animation = PygAnimation([dog_jump_images[1]])
 
-
 class Dog(pygame.sprite.Sprite):
     containers = pygame.sprite.RenderUpdates()
 
@@ -37,6 +36,13 @@ class Dog(pygame.sprite.Sprite):
         self.rect.y = start_position_y
         self.animation.play()
         self.is_before_background = False
+        
+        self.stage_animation_mapping = {
+            dog_walk_animation:self.__dog_walk_animation_update,
+            dog_smell_animation:self.__dog_smell_animation_update,
+            dog_jump_animation:self.__dog_jump_animation_update,
+            dog_landing_animation:self.__dog_landing_animation,
+        }
 
     def update(self):
         """Update this sprite for every frame"""
@@ -47,29 +53,32 @@ class Dog(pygame.sprite.Sprite):
 
     def __check_animation(self):
         # check the animation and change them according to the conditions
-        if self.animation == dog_walk_animation:
-            if self.rect.x < END_OF_DOG_WAY:
-                self.move()
-            else:
-                self.__change_animation(dog_smell_animation)
-                timer = threading.Timer(
-                    0.9, self.__change_animation, (dog_jump_animation,))
-                timer.start()
-        elif self.animation == dog_smell_animation:
-            pass
-        elif self.animation == dog_jump_animation:
-            if self.rect.y > END_OF_DOG_JUMP:
-                self.jump()
-            else:
-                self.__change_animation(dog_landing_animation)
-                self.is_before_background = True
-        elif self.animation == dog_landing_animation:
-            if self.rect.y < END_OF_DOG_LANDING:
-                self.landing()
-            else:
-                self.animation.stop()
-                self.kill()
-
+        self.stage_animation_mapping[self.animation]()
+            
+                
+    def __dog_walk_animation_update(self):
+        if self.rect.x < END_OF_DOG_WAY:
+            self.move()
+        else:
+            self.__change_animation(dog_smell_animation)
+            threading.Timer(0.9, self.__change_animation, (dog_jump_animation,)).start()
+    
+    def __dog_smell_animation_update(self):
+        pass
+    
+    def __dog_jump_animation_update(self):
+        if self.rect.y > END_OF_DOG_JUMP:
+            self.jump()
+        else:
+            self.__change_animation(dog_landing_animation)
+            self.is_before_background = True
+    
+    def __dog_landing_animation(self):
+        if self.rect.y < END_OF_DOG_LANDING:
+            self.landing()
+        else:
+            self.animation.stop()
+            self.kill()
     def move(self):
         """Changes the position of the dog when it moves."""
         self.rect.x += self.speed

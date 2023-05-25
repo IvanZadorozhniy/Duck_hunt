@@ -95,5 +95,5 @@ if __name__ == "__main__":
             draw_start_menu(screen, surface_display, background)
 
         if game_state == "Game":
-            # run_preview_of_game(screen, surface_display, background)
+            run_preview_of_game(screen, surface_display, background)
             game(screen, surface_display, background)

@@ -25,7 +25,7 @@ def draw_sky(surface):
 
 
 def draw_background_panels(surface):
-    Score.draw_background(surface)
+    ScorePanel.draw_background(surface)
     RoundPanel.draw_background(surface)
     BulletPanel.draw_background(surface)
 
